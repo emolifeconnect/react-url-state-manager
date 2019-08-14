@@ -1,0 +1,57 @@
+{
+  "name": "react-url-state-manager",
+  "version": "0.0.1",
+  "description": "React hook for using state in the URL",
+  "private": false,
+  "main": "dist/index.js",
+  "module": "dist/index.es.js",
+  "types": "dist/index.d.ts",
+  "repository": "emolifeconnect/react-url-state-manager",
+  "homepage": "https://github.com/emolifeconnect/react-url-state-manager",
+  "scripts": {
+    "build": "./node_modules/typescript/bin/tsc",
+    "test": "./node_modules/.bin/jest"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "react",
+    "url",
+    "query",
+    "params",
+    "state",
+    "hook",
+    "hooks",
+    "management",
+    "typescript"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "@types/enzyme": "^3.10.3",
+    "@types/enzyme-adapter-react-16": "^1.0.5",
+    "@types/jest": "^24.0.16",
+    "@types/react": "^16.8.24",
+    "@types/react-dom": "^16.8.5",
+    "enzyme": "^3.10.0",
+    "enzyme-adapter-react-16": "^1.14.0",
+    "jest": "^24.8.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "ts-jest": "^24.0.2",
+    "typescript": "^3.5.3"
+  },
+  "peerDependencies": {
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/test/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "tsx"
+    ]
+  }
+}
