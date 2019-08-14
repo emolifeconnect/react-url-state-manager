@@ -28,8 +28,12 @@ const Search = () => {
 
     const [urlState, setUrlState] = useUrlState(defaultUrlState);
 
+    const handleChange = (event) => {
+        setUrlState({ search: event.target.value }, { debounce: 250 });
+    };
+    
     return <form>
-        <input type="text" value={urlState.search} onChange={event => setUrlState({ search: event.target.value }, { debounce: 250 })} />
+        <input type="text" value={urlState.search} onChange={handleChange} />
     </form>;
 };
 ```
