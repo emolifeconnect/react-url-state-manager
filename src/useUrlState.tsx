@@ -25,6 +25,8 @@ const useUrlState = (defaultState: UrlState = null, defaultOptions: UseUrlStateO
 
     const { defaultStateRef, stateRef, debounceRef, rerender } = useContext(UrlStateContext);
 
+    const updatingRef = useRef(false);
+
     const getUrlState = () => {
         return {
             ...defaultStateRef.current,
@@ -77,6 +79,8 @@ const useUrlState = (defaultState: UrlState = null, defaultOptions: UseUrlStateO
      * Watches the internal state and syncs changes to the URL.
      */
     useEffect(() => {
+        updatingRef.current = true;
+
         const timeoutId = setTimeout(() => {
             const currentEncodedState = stateRef.current;
             const oldEncodedState = encode(getUrlState());
@@ -84,6 +88,8 @@ const useUrlState = (defaultState: UrlState = null, defaultOptions: UseUrlStateO
             if (currentEncodedState != oldEncodedState) {
                 pushState(currentEncodedState != encode(defaultState) ? currentEncodedState : null);
             }
+
+            updatingRef.current = false;
         }, debounceRef.current);
 
         return () => {
@@ -106,6 +112,15 @@ const useUrlState = (defaultState: UrlState = null, defaultOptions: UseUrlStateO
             window.removeEventListener('popstate', syncUrlStateToInternalState);
         };
     }, []);
+
+    /**
+     * Update the internal state every rerender (if not currently updating the URL).
+     */
+    useEffect(() => {
+        if (!updatingRef.current) {
+            syncUrlStateToInternalState();
+        }
+    });
 
     /**
      * Syncs the state in the URL to the internal state.
