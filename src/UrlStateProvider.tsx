@@ -3,6 +3,7 @@ import React, { createContext, useRef, useState } from 'react';
 import { UrlState } from './useUrlState';
 
 export const UrlStateContext = createContext({
+    defaultStateRef: { current: null },
     stateRef: { current: null },
     debounceRef: { current: null },
     rerender: null,
@@ -14,12 +15,13 @@ export interface UrlStateProviderProps {
 }
 
 const UrlStateProvider = ({ children }: UrlStateProviderProps) => {
-    const stateRef = useRef();
+    const defaultStateRef = useRef({} as UrlState);
+    const stateRef = useRef({} as UrlState);
     const debounceRef = useRef();
     const [renderCount, setRenderCount] = useState(1);
     const rerender = () => setRenderCount(count => count + 1);
 
-    return <UrlStateContext.Provider value={{ stateRef, debounceRef, rerender, renderCount }}>
+    return <UrlStateContext.Provider value={{ defaultStateRef, stateRef, debounceRef, rerender, renderCount }}>
         {children}
     </UrlStateContext.Provider>;
 };

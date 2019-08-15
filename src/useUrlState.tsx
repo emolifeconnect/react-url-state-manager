@@ -23,19 +23,25 @@ const useUrlState = (defaultState: UrlState = null, defaultOptions: UseUrlStateO
         ...defaultOptions
     };
 
+    const { defaultStateRef, stateRef, debounceRef, rerender, renderCount } = useContext(UrlStateContext);
+
     const getUrlState = () => {
         return {
-            ...defaultState,
+            ...defaultStateRef.current,
             ...getUrlParams()
         };
     };
 
-    const { stateRef, debounceRef, rerender, renderCount } = useContext(UrlStateContext);
-
     const localRenderCountRef = useRef(0);
 
     if (localRenderCountRef.current == 0) {
+        defaultStateRef.current = {
+            ...defaultStateRef.current,
+            ...defaultState
+        };
+
         stateRef.current = encode(getUrlState());
+
         debounceRef.current = defaultOptions.debounce;
     }
 

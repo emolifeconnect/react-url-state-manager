@@ -38,4 +38,4 @@ const Search = () => {
 
 `mergeParams(object)` creates a query string (for example: '?foo=bar') that merges the `object` with the current query parameters.
 
-`replacesParams(object)` creates a query string (for example: '?foo=bar') that replaces the current query parameters with the `object`.
+`replaceParams(object)` creates a query string (for example: '?foo=bar') that replaces the current query parameters with the `object`.
