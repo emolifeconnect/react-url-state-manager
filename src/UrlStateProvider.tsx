@@ -18,10 +18,10 @@ const UrlStateProvider = ({ children }: UrlStateProviderProps) => {
     const defaultStateRef = useRef({} as UrlState);
     const stateRef = useRef({} as UrlState);
     const debounceRef = useRef();
-    const [renderCount, setRenderCount] = useState(1);
+    const [, setRenderCount] = useState(1);
     const rerender = () => setRenderCount(count => count + 1);
 
-    return <UrlStateContext.Provider value={{ defaultStateRef, stateRef, debounceRef, rerender, renderCount }}>
+    return <UrlStateContext.Provider value={{ defaultStateRef, stateRef, debounceRef, rerender }}>
         {children}
     </UrlStateContext.Provider>;
 };

@@ -23,7 +23,7 @@ const useUrlState = (defaultState: UrlState = null, defaultOptions: UseUrlStateO
         ...defaultOptions
     };
 
-    const { defaultStateRef, stateRef, debounceRef, rerender, renderCount } = useContext(UrlStateContext);
+    const { defaultStateRef, stateRef, debounceRef, rerender } = useContext(UrlStateContext);
 
     const getUrlState = () => {
         return {
@@ -32,9 +32,7 @@ const useUrlState = (defaultState: UrlState = null, defaultOptions: UseUrlStateO
         };
     };
 
-    const localRenderCountRef = useRef(0);
-
-    if (localRenderCountRef.current == 0) {
+    onInit(() => {
         defaultStateRef.current = {
             ...defaultStateRef.current,
             ...defaultState
@@ -43,7 +41,7 @@ const useUrlState = (defaultState: UrlState = null, defaultOptions: UseUrlStateO
         stateRef.current = encode(getUrlState());
 
         debounceRef.current = defaultOptions.debounce;
-    }
+    });
 
     /**
      * Updates the state in the URL by merging it with a new `UrlState` or by applying an
@@ -98,22 +96,6 @@ const useUrlState = (defaultState: UrlState = null, defaultOptions: UseUrlStateO
     };
 
     /**
-     * Watches for external rerenders and syncs the URL params back to the internal state. An
-     * external rerender can be caused by anything and potenatially means that the params in the
-     * URL have been changed by something other than this hook. Internal rerenders are only caused
-     * by this hook's `setUrlState` function.
-     */
-    useEffect(() => {
-        localRenderCountRef.current++;
-
-        if (renderCount < localRenderCountRef.current) {
-            localRenderCountRef.current = renderCount;
-
-            syncUrlStateToInternalState();
-        }
-    });
-
-    /**
      * Updates the internal state when the user presses the back button. Necessary for apps that
      * don't use routing packages such as react-router.
      */
@@ -163,6 +145,16 @@ export const replaceParams = (params: UrlState)  => {
 
 const isFunction = (obj: any): boolean => {
     return !!(obj && obj.constructor && obj.call && obj.apply);
+};
+
+const onInit = (callback: () => void) => {
+    const renderCountRef = useRef(0);
+
+    if (renderCountRef.current === 0) {
+        callback();
+    }
+
+    renderCountRef.current++;
 };
 
 export default useUrlState;
