@@ -35,12 +35,8 @@ const useUrlState = (defaultState: UrlState = null, defaultOptions: UseUrlStateO
     };
 
     onInit(() => {
-        defaultStateRef.current = {
-            ...defaultStateRef.current,
-            ...defaultState
-        };
-
-        stateRef.current = encode(getUrlState());
+        merge(defaultStateRef.current, defaultState);
+        merge(stateRef.current, getUrlState());
 
         debounceRef.current = defaultOptions.debounce;
     });
@@ -58,19 +54,15 @@ const useUrlState = (defaultState: UrlState = null, defaultOptions: UseUrlStateO
 
         debounceRef.current = options.debounce;
 
-        const oldState = stateRef.current;
-        const decodedState = decode(oldState);
+        const oldState = { ...stateRef.current };
 
         if (isFunction(newValue)) {
-            stateRef.current = encode((newValue as UpdateUrlState)(decodedState));
+            stateRef.current = (newValue as UpdateUrlState)(oldState);
         } else {
-            stateRef.current = encode({
-                ...decodedState,
-                ...newValue
-            });
+            merge(stateRef.current, newValue);
         }
 
-        if (stateRef.current != oldState) {
+        if (encode(stateRef.current) != encode(oldState)) {
             rerender();
         }
     };
@@ -82,7 +74,7 @@ const useUrlState = (defaultState: UrlState = null, defaultOptions: UseUrlStateO
         updatingRef.current = true;
 
         const timeoutId = setTimeout(() => {
-            const currentEncodedState = stateRef.current;
+            const currentEncodedState = encode(stateRef.current);
             const oldEncodedState = encode(getUrlState());
 
             if (currentEncodedState != oldEncodedState) {
@@ -95,7 +87,7 @@ const useUrlState = (defaultState: UrlState = null, defaultOptions: UseUrlStateO
         return () => {
             clearTimeout(timeoutId);
         };
-    }, [stateRef.current]);
+    }, [encode(stateRef.current)]);
 
     const pushState = (search: string) => {
         window.history.pushState({}, '', window.location.pathname + (search ? '?' + search : ''));
@@ -130,7 +122,7 @@ const useUrlState = (defaultState: UrlState = null, defaultOptions: UseUrlStateO
     };
 
     return [
-        decode(stateRef.current),
+        stateRef.current,
         setUrlState
     ] as [UrlState, SetUrlState];
 };
@@ -145,6 +137,14 @@ export const decode = (state: string) => {
 
 export const encode = (params: UrlState) => {
     return qs.stringify(params, { encodeValuesOnly: true, skipNulls: true });
+};
+
+const merge = (base: any, other: any): any => {
+    for (let key in other) {
+        base[key] = other[key];
+    }
+
+    return base;
 };
 
 export const mergeParams = (params: UrlState)  => {

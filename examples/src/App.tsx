@@ -29,6 +29,8 @@ const App = () => {
         <button onClick={() => rerender()}>Reset URL</button>
         <br /><br />
         Renders: {count.current}
+        <br /><br />
+        {JSON.stringify(urlState)}
     </div>;
 };
 
