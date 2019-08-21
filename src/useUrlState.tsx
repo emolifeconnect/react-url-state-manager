@@ -112,7 +112,7 @@ const useUrlState = (defaultState: UrlState = null, defaultOptions: UseUrlStateO
         if (!updatingRef.current) {
             syncUrlStateToInternalState();
         }
-    });
+    }, [location.search.substr(1)]);
 
     /**
      * Syncs the state in the URL to the internal state.
