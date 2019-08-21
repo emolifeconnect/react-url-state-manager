@@ -118,7 +118,14 @@ const useUrlState = (defaultState: UrlState = null, defaultOptions: UseUrlStateO
      * Syncs the state in the URL to the internal state.
      */
     const syncUrlStateToInternalState = () => {
-        setUrlState(() => getUrlState());
+        const encodedState = encode(stateRef.current);
+        const urlState = getUrlState();
+        const encodedUrlState = encode(urlState);
+
+        if (encodedState != encodedUrlState) {
+            stateRef.current = urlState;
+            rerender();
+        }
     };
 
     return [

@@ -1,6 +1,6 @@
 {
   "name": "react-url-state-manager",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "React hook for using state in the URL",
   "private": false,
   "main": "dist/index.js",
