@@ -54,15 +54,15 @@ const useUrlState = (defaultState: UrlState = null, defaultOptions: UseUrlStateO
 
         debounceRef.current = options.debounce;
 
-        const oldState = { ...stateRef.current };
+        const encodedOldState = encode(stateRef.current);
 
         if (isFunction(newValue)) {
-            stateRef.current = (newValue as UpdateUrlState)(oldState);
+            stateRef.current = (newValue as UpdateUrlState)({ ...stateRef.current });
         } else {
             merge(stateRef.current, newValue);
         }
 
-        if (encode(stateRef.current) != encode(oldState)) {
+        if (encode(stateRef.current) != encodedOldState) {
             rerender();
         }
     };
